@@ -1,5 +1,4 @@
 import axios from 'axios';
-import * as Cookie from 'js-cookie';
 
 export default class BaseApi {
   constructor () {
