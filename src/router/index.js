@@ -8,6 +8,7 @@ let routes = [
     // will match everything
     path: '/',
     layout: "index",
+    name: "Мобильное приложение и сайт для ресторанного бизнеса",
     meta: {
       layoutClass: 'index',
     },
