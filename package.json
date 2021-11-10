@@ -9,7 +9,13 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
-    "vue": "^2.6.11"
+    "inputmask": "^5.0.6",
+    "sass": "^1.43.4",
+    "sass-loader": "^10.2.0",
+    "v-mask": "^2.3.0",
+    "vue": "^2.6.11",
+    "vue-phone-mask-input": "^1.1.11",
+    "vue-router": "^3.5.3"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
