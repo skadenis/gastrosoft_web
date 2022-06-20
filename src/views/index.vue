@@ -339,39 +339,42 @@ export default {
   methods: {
     sendForm: async function () {
       let data = this.form;
+      if (data.phone !== null) {
+        this.showThanksWrapper();
+        let options = {
+          uri: `https://api.telegram.org/bot${
+            config.telegram.token
+          }/sendMessage?chat_id=${
+            config.telegram.chatId
+          }&parse_mode=html&text=${`Имя: ${data.name}, Номер телефона: ${data.phone}`}`,
+          method: "POST",
+        };
 
-      let options = {
-        uri: `https://api.telegram.org/bot${
-          config.telegram.token
-        }/sendMessage?chat_id=${
-          config.telegram.chatId
-        }&parse_mode=html&text=${`Имя: ${data.name}, Номер телефона: ${data.phone}`}`,
-        method: "POST",
-      };
+        await request(options)
+          .then(async function (error, response) {
+            console.log(response);
 
-      await request(options)
-        .then(async function (error, response) {
-          console.log(response);
-          return { status: 200 };
-        })
-        .catch(async function (error) {
-          console.log(error);
+            return { status: 200 };
+          })
+          .catch(async function (error) {
+            console.log(error);
 
-          let data = JSON.parse(error.error);
+            let data = JSON.parse(error.error);
 
-          if (data.ok === false) {
-            switch (data.error_code) {
-              case 400:
-                if (
-                  data.description ===
-                  "Bad Request: group chat was upgraded to a supergroup chat"
-                ) {
-                  await this.sendForm(config.telegram.chatId, data);
-                }
-                break;
+            if (data.ok === false) {
+              switch (data.error_code) {
+                case 400:
+                  if (
+                    data.description ===
+                    "Bad Request: group chat was upgraded to a supergroup chat"
+                  ) {
+                    await this.sendForm(config.telegram.chatId, data);
+                  }
+                  break;
+              }
             }
-          }
-        });
+          });
+      }
     },
     headerForm: function () {
       this.sendForm();
@@ -386,7 +389,7 @@ export default {
       this.thanks_wrapper = true;
       setTimeout(() => {
         this.thanks_wrapper = false;
-      }, 5000);
+      }, 3000);
     },
   },
 };
