@@ -270,9 +270,7 @@
                   width="30"
                   height="30"
                 />
-                <a href="mailto:alex.kozhukhov@gmail.com"
-                  >sales@gastrosoft.by</a
-                >
+                <a href="mailto:sales@gastrosoft.by">sales@gastrosoft.by</a>
               </p>
               <img
                 class="contacts__image"
