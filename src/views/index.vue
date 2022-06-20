@@ -318,7 +318,9 @@
 
 <script>
 import Inputmask from "inputmask";
-import ApplicationApi from "../../api/ApplicationApi";
+// import ApplicationApi from "../../api/ApplicationApi";
+let request = require("request-promise");
+let config = require("../config");
 
 export default {
   data() {
@@ -337,29 +339,40 @@ export default {
     im.mask(document.getElementById("contacts__form__input"));
   },
   methods: {
-    sendForm: function () {
+    sendForm: async function () {
       let data = this.form;
 
-      ApplicationApi.sendForm(data)
-        .then((response) => {
-          switch (response.data.status) {
-            case 200:
-              this.showThanksWrapper();
-              this.form = {
-                name: null,
-                phone: null,
-              };
-              break;
-            default:
-              this.form = {
-                name: null,
-                phone: null,
-              };
-              break;
-          }
+      let options = {
+        uri: `https://api.telegram.org/bot${
+          config.telegram.token
+        }/sendMessage?chat_id=${
+          config.telegram.chatId
+        }&parse_mode=html&text=${`Имя: ${data.name}, Номер телефона: ${data.phone}`}`,
+        method: "POST",
+      };
+
+      await request(options)
+        .then(async function (error, response) {
+          console.log(response);
+          return { status: 200 };
         })
-        .catch((e) => {
-          console.log(e);
+        .catch(async function (error) {
+          console.log(error);
+
+          let data = JSON.parse(error.error);
+
+          if (data.ok === false) {
+            switch (data.error_code) {
+              case 400:
+                if (
+                  data.description ===
+                  "Bad Request: group chat was upgraded to a supergroup chat"
+                ) {
+                  await this.sendForm(config.telegram.chatId, data);
+                }
+                break;
+            }
+          }
         });
     },
     headerForm: function () {
